@@ -1,0 +1,84 @@
+﻿@using Newtonsoft.Json;
+@using Umbraco.Cms.Core.Models.Blocks;
+@using Umbraco.Extensions
+@using Umbraco.Cms.Core.Models
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@using FlexForms.Models.FormFields;
+@using FlexForms.Models;
+@using FlexFormModels = FlexForms.Models.FormFields;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+@{
+    var content = (ContentModels.ContactForm)Model.Content;
+    var formHeader = !string.IsNullOrEmpty(content.FormHeader) ? content.FormHeader : "Contact Us";
+
+    var formelements = content.Elements?
+        .Select(x => x.Content)
+        .Cast<ContentModels.FormElement>();
+
+    var elements = new List<FormElementBase>();
+
+    foreach (var formelement in formelements)
+    {
+        switch (formelement)
+        {
+            case ContentModels.FormTextbox:
+                elements.Add(new FlexFormModels.Textbox { 
+                    Label = formelement.Label, 
+                    IsMandatory = formelement.IsMandatory 
+                });
+                break;
+
+            case ContentModels.FormCheckbox:
+                elements.Add(new FlexFormModels.Checkbox { 
+                    Label = formelement.Label, 
+                    IsMandatory = formelement.IsMandatory 
+                });
+                break;
+
+            case ContentModels.FormTextArea:
+                elements.Add(new FlexFormModels.TextArea { 
+                    Label = formelement.Label, 
+                    IsMandatory = formelement.IsMandatory 
+                });
+                break;
+
+            case ContentModels.FormRadioSection radioSection:
+                elements.Add(new FlexFormModels.RadioSection { 
+                    Label = formelement.Label, 
+                    IsMandatory = formelement.IsMandatory,
+                    RadioOptions = radioSection.RadioOptions
+                        .Select(x => x.Content)
+                        .Cast<ContentModels.FormOptionsList>()
+                        .Select(x => x.Option ?? "")
+                });
+                break;
+
+            case ContentModels.FormDropdown dropdown:
+                elements.Add(new FlexFormModels.Dropdown { 
+                    Label = formelement.Label, 
+                    IsMandatory = formelement.IsMandatory,
+                    DropdownOptions = dropdown.DropdownOptions
+                        .Select(x => x.Content)
+                        .Cast<ContentModels.FormOptionsList>()
+                        .Select(x => x.Option ?? "")
+                });
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
+
+<section class="contact-form">
+
+    <h2>@formHeader</h2>
+
+    <partial 
+        name="~/Views/Partials/forms/ContactForm.cshtml"
+        model='@new ContactFormViewModel(elements, content.FormIdentifier, content.SuccessMessage)'
+        view-data="ViewData" 
+    />
+
+</section>
