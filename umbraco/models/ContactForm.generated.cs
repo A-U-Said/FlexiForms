@@ -50,6 +50,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
+		/// Captcha
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("captcha")]
+		public virtual global::FlexiForms.Backoffice.CaptchaCredentialsValue Captcha => this.Value<global::FlexiForms.Backoffice.CaptchaCredentialsValue>(_publishedValueFallback, "captcha");
+
+		///<summary>
 		/// Elements
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
@@ -66,14 +74,6 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual string FormHeader => this.Value<string>(_publishedValueFallback, "formHeader");
 
 		///<summary>
-		/// Form Identifier
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("formIdentifier")]
-		public virtual string FormIdentifier => this.Value<string>(_publishedValueFallback, "formIdentifier");
-
-		///<summary>
 		/// Recipients
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
@@ -88,6 +88,20 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("recieptEmailAttachments")]
 		public virtual global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.MediaWithCrops> RecieptEmailAttachments => this.Value<global::System.Collections.Generic.IEnumerable<global::Umbraco.Cms.Core.Models.MediaWithCrops>>(_publishedValueFallback, "recieptEmailAttachments");
+
+		///<summary>
+		/// Send External Email
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
+		[ImplementPropertyType("sendExternalEmail")]
+		public virtual bool SendExternalEmail => this.Value<bool>(_publishedValueFallback, "sendExternalEmail");
+
+		///<summary>
+		/// Send Internal Email
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
+		[ImplementPropertyType("sendInternalEmail")]
+		public virtual bool SendInternalEmail => this.Value<bool>(_publishedValueFallback, "sendInternalEmail");
 
 		///<summary>
 		/// Success Message: Default is "Contact Form Submitted Successfully"

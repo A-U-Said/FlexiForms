@@ -6,7 +6,7 @@ using System;
 using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Models;
 
-namespace FlexForms.Models
+namespace FlexiForms.Models
 {
     public class FormObject
     {

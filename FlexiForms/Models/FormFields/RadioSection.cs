@@ -1,5 +1,5 @@
 ﻿
-namespace FlexForms.Models.FormFields
+namespace FlexiForms.Models.FormFields
 {
     public class RadioSection : FormElementBase
     {

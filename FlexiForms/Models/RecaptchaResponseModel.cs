@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace FlexForms.Models
+namespace FlexiForms.Models
 {
     public class RecaptchaResponseModel
     {

@@ -1,12 +1,10 @@
 ﻿@using Microsoft.Extensions.Configuration;
 @using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-@using FlexForms.Controllers;
-@using FlexFormModels = FlexForms.Models.FormFields;
+@using FlexiForms.Controllers;
+@using FlexiFormModels = FlexiForms.Models.FormFields;
 @inject IConfiguration _configuration;
-@model FlexForms.Models.ContactFormViewModel;
+@model FlexiForms.Models.ContactFormViewModel;
 @{
-    var siteKey = _configuration.GetValue<string>("ReCaptcha:Sitekey");
-
     string submittedFormType = (string)TempData["FormType"];
 
     var submitted = false;
@@ -17,127 +15,123 @@
 }
 
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<section class="contact-form">
 
-@if (submitted && success && submittedFormType == Model.FormIdentifier)
-{
-    if (Model.SuccessMessage != null)
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <h2>@Model.FormHeader</h2>
+
+    @if (submitted && success && submittedFormType == Model.FormIdentifier)
     {
         @Html.Raw(Model.SuccessMessage)
     }
     else
     {
-        <p>Your enquirey has been sent</p>
-    }
-}
-else
-{
-    if (submitted && !success && submittedFormType == Model.FormIdentifier)
-    {
-        <div>
-            <p class="form-error">Error</p>
-            @Html.ValidationSummary()
-            @Html.AntiForgeryToken()
-        </div>
-    }
+        if (submitted && !success && submittedFormType == Model.FormIdentifier)
+        {
+            <div>
+                <p class="form-error">Error</p>
+                @Html.ValidationSummary()
+                @Html.AntiForgeryToken()
+            </div>
+        }
 
-    @using (Html.BeginUmbracoForm<ContactFormController>(nameof(ContactFormController.Submit)))
-    {
-        <ul>
-            <li>
-                <label asp-for="Name"></label>
-                <input asp-for="Name" />
-            </li>
-            <li class="form-row">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" />
-            </li>
-            @if (Model.Elements != null && Model.Elements.Any())
-            {
-                for (var i = 0; i < Model.Elements.Count(); i++)
+        @using (Html.BeginUmbracoForm<ContactFormController>(nameof(ContactFormController.Submit)))
+        {
+            <ul>
+                <li>
+                    <label asp-for="Name" />
+                    <input asp-for="Name" />
+                </li>
+                <li class="form-row">
+                    <label asp-for="Email" />
+                    <input asp-for="Email" />
+                </li>
+                @if (Model.Elements != null && Model.Elements.Any())
                 {
-                    switch (Model.Elements.ElementAtOrDefault(i))
+                    for (var i = 0; i < Model.Elements.Count(); i++)
                     {
+                        switch (Model.Elements.ElementAtOrDefault(i))
+                        {
 
-                        case FlexFormModels.Textbox formTextbox:
-                            <li>
-                                <label for="Elements[@i].Value">@(formTextbox.Label)</label>
-                                <input id="Elements[@i].Value" type="text" name="Elements[@i].Value" @(formTextbox.IsMandatory ? "required" : "") />
+                            case FlexiFormModels.Textbox formTextbox:
+                                <li>
+                                    <label for="Elements[@i].Value">@(formTextbox.Label)</label>
+                                    <input id="Elements[@i].Value" type="text" name="Elements[@i].Value" @(formTextbox.IsMandatory.Value ? "required" : "") />
 
-                                <input type="hidden" name="Elements[@i].Label" value="@(formTextbox.Label)" />
-                                <input type="hidden" name="Elements[@i].IsMandatory" value="@(formTextbox.IsMandatory ? "true" : "false")" />
-                            </li>
-                            break;
+                                    <input type="hidden" name="Elements[@i].Id" value="@(formTextbox.Id)" />
+                                </li>
+                                break;
 
-                        case FlexFormModels.Checkbox formCheckbox:
-                            <li>
-                                <label for="Elements[@i].Value">@(formCheckbox.Label)</label>
-                                <input id="Elements[@i].Value" type="checkbox" name="Elements[@i].Value" @(formCheckbox.IsMandatory ? "required" : "") />
+                            case FlexiFormModels.Checkbox formCheckbox:
+                                <li>
+                                    <label for="Elements[@i].Value">@(formCheckbox.Label)</label>
+                                    <input id="Elements[@i].Value" type="checkbox" name="Elements[@i].Value" @(formCheckbox.IsMandatory.Value ? "required" : "") />
 
-                                <input type="hidden" name="Elements[@i].Label" value="@(formCheckbox.Label)" />
-                                <input type="hidden" name="Elements[@i].IsMandatory" value="@(formCheckbox.IsMandatory ? "true" : "false")" />
-                            </li>
-                            break;
+                                    <input type="hidden" name="Elements[@i].Id" value="@(formCheckbox.Id)" />
+                                </li>
+                                break;
 
-                        case FlexFormModels.RadioSection formRadioSection:
-                            <li>
-                                <label for="Elements[@i].Value">@formRadioSection.Label</label>
-                                <ul class="form-inner">
-                                    @foreach (var radioOption in formRadioSection.RadioOptions)
-                                    {
-                                        <li>
-                                            <input id="@radioOption" type="radio" name="Elements[@i].Value" value="@radioOption" />
-                                            <label for="@radioOption">@radioOption</label>
-                                        </li>
-                                    }
-                                </ul>
-                                <input type="hidden" name="Elements[@i].Label" value="@(formRadioSection.Label)" />
-                                <input type="hidden" name="Elements[@i].IsMandatory" value="@(formRadioSection.IsMandatory ? "true" : "false")" />
-                            </li>
-                            break;
+                            case FlexiFormModels.RadioSection formRadioSection:
+                                <li>
+                                    <label for="Elements[@i].Value">@formRadioSection.Label</label>
+                                    <ul class="form-inner">
+                                        @foreach (var radioOption in formRadioSection.RadioOptions)
+                                        {
+                                            <li>
+                                                <input id="@radioOption" type="radio" name="Elements[@i].Value" value="@radioOption" />
+                                                <label for="@radioOption">@radioOption</label>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <input type="hidden" name="Elements[@i].Id" value="@(formRadioSection.Id)" />
+                                </li>
+                                break;
 
-                        case FlexFormModels.TextArea formTextArea:
-                            <li>
-                                <label for="Elements[@i].Value">@(formTextArea.Label)</label>
-                                <textarea id="Elements[@i].Value" for="Elements[@i].Value" name="Elements[@i].Value" rows="5" @(formTextArea.IsMandatory ? "required" : "")></textarea>
+                            case FlexiFormModels.TextArea formTextArea:
+                                <li>
+                                    <label for="Elements[@i].Value">@(formTextArea.Label)</label>
+                                    <textarea id="Elements[@i].Value" for="Elements[@i].Value" name="Elements[@i].Value" rows="5" @(formTextArea.IsMandatory.Value ? "required" : "")></textarea>
 
-                                <input type="hidden" name="Elements[@i].Label" value="@(formTextArea.Label)" />
-                                <input type="hidden" name="Elements[@i].IsMandatory" value="@(formTextArea.IsMandatory ? "true" : "false")" />
-                            </li>
-                            break;
+                                    <input type="hidden" name="Elements[@i].Id" value="@(formTextArea.Id)" />
+                                </li>
+                                break;
 
-                        case FlexFormModels.Dropdown formDropdown:
-                            <li>
-                                <label for="Elements[@i].Value">@formDropdown.Label</label>
-                                <select id="Elements[@i].Value" for="Elements[@i].Value" name="@formDropdown.Label" @(formDropdown.IsMandatory ? "required" : "")>
-                                    @foreach (var dropdownOption in formDropdown.DropdownOptions)
-                                    {
-                                        <option value="@dropdownOption">@dropdownOption</option>
-                                    }
-                                </select>
+                            case FlexiFormModels.Dropdown formDropdown:
+                                <li>
+                                    <label for="Elements[@i].Value">@formDropdown.Label</label>
+                                    <select id="Elements[@i].Value" for="Elements[@i].Value" name="Elements[@i].Value" @(formDropdown.IsMandatory.Value ? "required" : "")>
+                                        @foreach (var dropdownOption in formDropdown.DropdownOptions)
+                                        {
+                                            <option value="@dropdownOption">@dropdownOption</option>
+                                        }
+                                    </select>
 
-                                <input type="hidden" name="Elements[@i].Label" value="@(formDropdown.Label)" />
-                                <input type="hidden" name="Elements[@i].IsMandatory" value="@(formDropdown.IsMandatory ? " true" : "false" )" />
-                            </li>
-                            break;
+                                    <input type="hidden" name="Elements[@i].Id" value="@(formDropdown.Id)" />
+                                </li>
+                                break;
 
-                        default:
-                            break;
+                            default:
+                                break;
+                        }
                     }
                 }
-            }
-            <li>
-                <input type="hidden" asp-for="FormIdentifier" value="@Model.FormIdentifier">
-            </li>
-            <li>
-                <div class="g-recaptcha" data-sitekey="@siteKey"></div>
-            </li>
-            <li>
-                <button type="submit">Submit</button>
-            </li>
-        </ul>
+                <li>
+                    <input type="hidden" asp-for="FormIdentifier" value="@Model.FormIdentifier">
+                </li>
+                @if (Model.Captcha != null)
+                {
+                    <li>
+                        <div class="g-recaptcha" data-sitekey="@Model.Captcha.Sitekey"></div>
+                    </li>
+                }
+                <li>
+                    <button type="submit">Submit</button>
+                </li>
+            </ul>
+        }
     }
-}
 
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
-</script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+
+</section>

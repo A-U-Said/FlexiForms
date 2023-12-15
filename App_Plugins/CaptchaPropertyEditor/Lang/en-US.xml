@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en_us" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
+
+	<creator>
+		<name>Adam Utton-Said</name>
+		<link>https://github.com/A-U-Said</link>
+	</creator>
+		
+	<area alias="flexiforms">
+		<key alias="sitekey">Site Key</key>
+		<key alias="clientsecret">Client Secret</key>
+	</area>
+		
+</language>

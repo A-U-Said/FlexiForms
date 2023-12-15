@@ -1,0 +1,9 @@
+{
+	"css": [
+		"~/App_Plugins/CaptchaPropertyEditor/CaptchaCredentials.css"
+	],
+	"javascript": [
+		"~/App_Plugins/CaptchaPropertyEditor/CaptchaCredentials.controller.js",
+		"~/App_Plugins/CaptchaPropertyEditor/CaptchaCredentials.prevalues.controller.js",
+	]
+}
