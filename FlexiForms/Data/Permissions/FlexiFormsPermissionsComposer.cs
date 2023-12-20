@@ -7,7 +7,7 @@ using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
 using Umbraco.Cms.Infrastructure.Migrations;
 using FlexiForms.Data.Permissions;
 
-namespace UpdatedForms.FlexiForms.Data.Permissions
+namespace FlexiForms.Data.Permissions
 {
     public class FlexiFormsPermissionsComposer : ComponentComposer<FlexiFormsPermissionsComponent>
     {

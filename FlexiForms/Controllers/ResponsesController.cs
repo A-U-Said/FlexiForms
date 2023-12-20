@@ -7,7 +7,7 @@ using Umbraco.Cms.Web.Common.Attributes;
 using Umbraco.Cms.Web.Common.Controllers;
 
 
-namespace UpdatedForms.FlexiForms.Controllers
+namespace FlexiForms.Controllers
 {
     [PluginController("FlexiForms")]
     public class ResponsesController : UmbracoApiController
