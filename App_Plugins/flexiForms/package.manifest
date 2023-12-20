@@ -1,0 +1,13 @@
+{
+	"css": [
+		"~/App_Plugins/flexiForms/CaptchaPropertyEditor/CaptchaCredentials.css",
+		"~/App_Plugins/flexiForms/backoffice/responses/flexiForms.css"
+	],
+	"javascript": [
+		"~/App_Plugins/flexiForms/CaptchaPropertyEditor/CaptchaCredentials.controller.js",
+		"~/App_Plugins/flexiForms/CaptchaPropertyEditor/CaptchaCredentials.prevalues.controller.js",
+		"~/App_Plugins/flexiForms/backoffice/responses/view.controller.js",
+		"~/App_Plugins/flexiForms/backoffice/responses/delete.controller.js",
+		"~/App_Plugins/flexiForms/backoffice/responses/flexiFormsResponse.resource.js",		
+	]
+}

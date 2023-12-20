@@ -13,6 +13,16 @@ namespace FlexiForms
         public static class Backoffice
         {
             public const string CaptchaAlias = "FlexiForms.Captcha";
+            public const string SectionAlias = "flexiForms";
+            public const string SectionName = "FlexiForms";
+            public const string TreeAlias = "responses";
+            public const string TreeName = "FlexiForms Responses";
+            public const string TreeUrl = $"{SectionAlias}/{TreeAlias}";
+        }
+
+        public static class Database
+        {
+            public const string ResponseTable = "FlexiFormResponses";
         }
 
         public static class SupportedContent

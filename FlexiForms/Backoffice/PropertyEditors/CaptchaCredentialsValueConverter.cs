@@ -5,7 +5,7 @@ using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.PropertyEditors.ValueConverters;
 using Umbraco.Cms.Core.PublishedCache;
 
-namespace FlexiForms.Backoffice
+namespace FlexiForms.Backoffice.PropertyEditors
 {
     public class CaptchaCredentialsValueConverter : IPropertyValueConverter
     {

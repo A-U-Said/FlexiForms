@@ -1,0 +1,77 @@
+<div>
+	<umb-editor-view>
+	
+		<umb-editor-header
+			name="model.title"
+			hide-icon="true"
+			hide-alias="true"
+			name-locked="true"
+			hide-description="true">
+		</umb-editor-header>
+		
+		<umb-editor-container>
+		
+			<umb-box>
+				<umb-box-header title="User"></umb-box-header>
+				<umb-box-content>
+					<div class="ff-response-item">
+						<strong>Name</strong>
+						<p>{{ model.response.name }}</p>
+					</div>
+					<div class="ff-response-item">
+						<strong>Email</strong>
+						<p>{{ model.response.email }}</p>
+					</div>
+					<div class="ff-response-item">
+						<strong>Created</strong>
+						<p>{{ model.response.createDate | date:'dd/MM/yyyy HH:mm' }}</p>
+					</div>
+				</umb-box-content>
+			</umb-box>
+			
+			<umb-box>
+				<umb-box-header title="Responses"></umb-box-header>
+				<umb-box-content>
+					<div class="ff-response-item" ng-repeat="(key, value) in model.response.fields">
+						<strong>{{ key }}</strong>
+						<p>{{ value }}</p>
+					</div>
+				</umb-box-content>
+			</umb-box>
+			
+			<umb-box>
+				<umb-box-header title="Emails"></umb-box-header>
+				<umb-box-content>
+					<div class="ff-response-item">
+						<strong>Internal email sent</strong>
+						<p>{{ model.response.internalSent }}</p>
+					</div>
+					<div class="ff-response-item">
+						<strong>External email sent</strong>
+						<p>{{ model.response.externalSent }}</p>
+					</div>
+				</umb-box-content>
+			</umb-box>
+				
+		</umb-editor-container>
+		
+		<umb-editor-footer>
+			<umb-editor-footer-content-right>
+				<umb-button
+					type="button"
+					button-style="link"
+					label-key="general_close"
+					shortcut="esc"
+					action="model.close()">
+				</umb-button>
+				<umb-button
+					type="button"
+					button-style="danger"
+					label-key="general_delete"
+					action="model.delete()">
+				</umb-button>
+			</umb-editor-footer-content-right>
+		</umb-editor-footer>
+			
+	</umb-editor-view>
+</div>

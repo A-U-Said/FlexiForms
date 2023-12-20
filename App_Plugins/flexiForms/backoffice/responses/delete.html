@@ -1,0 +1,12 @@
+<div class="umb-dialog umb-pane" ng-controller="FlexiForms.DeleteController as vm">
+	<div class="umb-dialog-body">
+
+		<p class="abstract">
+			<localize key="flexiforms_deleteallwarning">Are you sure you want to delete all responses for</localize> <strong>{{currentNode.name}}</strong>?
+		</p>
+
+		<umb-confirm on-confirm="vm.performDelete" on-cancel="vm.cancel" confirm-button-style="danger">
+		</umb-confirm>
+
+	</div>
+</div>

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using FlexiForms.Backoffice;
+using FlexiForms.Backoffice.PropertyEditors;
 using FlexiForms.Extensions;
 using FlexiForms.Models.FormFields;
 using Umbraco.Cms.Core;

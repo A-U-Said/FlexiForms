@@ -2,12 +2,12 @@
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
 
-namespace FlexiForms.Backoffice
+namespace FlexiForms.Backoffice.PropertyEditors
 {
     [DataEditor(
     alias: FlexiFormConstants.Backoffice.CaptchaAlias,
     name: "Captcha",
-    view: "~/App_Plugins/CaptchaPropertyEditor/CaptchaCredentials.html",
+    view: "~/App_Plugins/flexiForms/CaptchaPropertyEditor/CaptchaCredentials.html",
     Group = "Common",
     Icon = "icon-list")]
     public class CaptchaCredentials : DataEditor

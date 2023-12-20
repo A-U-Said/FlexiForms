@@ -2,7 +2,7 @@
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
 
-namespace FlexiForms.Backoffice
+namespace FlexiForms.Backoffice.PropertyEditors
 {
     public class CaptchaCredentialsConfigurationEditor : ConfigurationEditor<CaptchaCredentialsConfiguration>
     {

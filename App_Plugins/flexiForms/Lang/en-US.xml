@@ -9,6 +9,12 @@
 	<area alias="flexiforms">
 		<key alias="sitekey">Site Key</key>
 		<key alias="clientsecret">Client Secret</key>
+		<key alias="deletewarning">This will delete the response from</key>
+		<key alias="deleteallwarning">Are you sure you want to delete all responses for</key>
+	</area>
+
+	<area alias="sections">
+		<key alias="flexiForms">FlexiForms</key>
 	</area>
 		
 </language>

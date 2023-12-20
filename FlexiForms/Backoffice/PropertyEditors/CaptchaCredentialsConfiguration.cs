@@ -2,14 +2,14 @@
 using Umbraco.Cms.Core.PropertyEditors;
 
 
-namespace FlexiForms.Backoffice
+namespace FlexiForms.Backoffice.PropertyEditors
 {
     public class CaptchaCredentialsConfiguration
     {
         [ConfigurationField(
             "captchaCredentials", 
             "Define Captcha Credentials",
-            "~/App_Plugins/CaptchaPropertyEditor/CaptchaCredentials.prevalues.html", 
+            "~/App_Plugins/flexiForms/CaptchaPropertyEditor/CaptchaCredentials.prevalues.html", 
             Description = "Add Captcha Credentials"
         )]
         public CaptchaCredential[]? CaptchaCredentials { get; set; }

@@ -55,7 +55,7 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("captcha")]
-		public virtual global::FlexiForms.Backoffice.CaptchaCredentialsValue Captcha => this.Value<global::FlexiForms.Backoffice.CaptchaCredentialsValue>(_publishedValueFallback, "captcha");
+		public virtual global::FlexiForms.Backoffice.PropertyEditors.CaptchaCredentialsValue Captcha => this.Value<global::FlexiForms.Backoffice.PropertyEditors.CaptchaCredentialsValue>(_publishedValueFallback, "captcha");
 
 		///<summary>
 		/// Elements
@@ -72,6 +72,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("formHeader")]
 		public virtual string FormHeader => this.Value<string>(_publishedValueFallback, "formHeader");
+
+		///<summary>
+		/// Form Identifier: Necessary to store responses. If left blank, the response will not be stored.
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("formIdentifier")]
+		public virtual string FormIdentifier => this.Value<string>(_publishedValueFallback, "formIdentifier");
 
 		///<summary>
 		/// Recipients
@@ -102,6 +110,13 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
 		[ImplementPropertyType("sendInternalEmail")]
 		public virtual bool SendInternalEmail => this.Value<bool>(_publishedValueFallback, "sendInternalEmail");
+
+		///<summary>
+		/// Store Response
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "12.3.3+d2ff2ea")]
+		[ImplementPropertyType("storeResponse")]
+		public virtual bool StoreResponse => this.Value<bool>(_publishedValueFallback, "storeResponse");
 
 		///<summary>
 		/// Success Message: Default is "Contact Form Submitted Successfully"

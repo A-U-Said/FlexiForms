@@ -25,6 +25,11 @@ using Umbraco.Cms.Web.Common.PublishedModels;
 using FlexiForms.Models.FormFields;
 using FlexiForms.Backoffice;
 using FlexiForms.Extensions;
+using static Umbraco.Cms.Core.Collections.TopoGraph;
+using FlexiForms.Backoffice.PropertyEditors;
+using FlexiForms.Data.Tables;
+using FlexiForms.Data.Repositories;
+using Lucene.Net.Index;
 
 namespace FlexiForms.Controllers
 {
@@ -46,6 +51,8 @@ namespace FlexiForms.Controllers
         private readonly BlockGridPropertyValueConverter _blockGridPropertyValueConverter;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly BlockEditorConverter _blockEditorConverter;
+        private readonly IUmbracoContextAccessor _umbracoContextAccessor;
+        private readonly IFlexiFormsResponsesRepository _responseRepository;
         private readonly string _senderAddress;
         private readonly TextInfo _textinfo = new CultureInfo("en-US", false).TextInfo;
 
@@ -69,6 +76,7 @@ namespace FlexiForms.Controllers
             IPublishedContentQuery publishedContentQuery,
             IPublishedSnapshotAccessor publishedSnapshotAccessor,
             IPublishedModelFactory publishedModelFactory,
+            IFlexiFormsResponsesRepository responseRepository,
             BlockGridPropertyValueConverter blockGridPropertyValueConverter,
             BlockEditorConverter blockEditorConverter,
             MediaFileManager mediaFileManager)
@@ -90,39 +98,10 @@ namespace FlexiForms.Controllers
             _publishedContentQuery = publishedContentQuery;
             _publishedSnapshotAccessor = publishedSnapshotAccessor;
             _publishedModelFactory = publishedModelFactory;
+            _responseRepository = responseRepository;
             _blockEditorConverter = blockEditorConverter;
             _blockGridPropertyValueConverter = blockGridPropertyValueConverter;
-        }
-
-        private ContactForm? GetCorrespondingForm(ContactFormViewModel model, IPublishedContent publishedPageContent)
-        {
-            foreach (var publishedProperty in publishedPageContent.Properties
-                .Where(x => FlexiFormConstants.SupportedContent.GetSuppportedContent().Contains(x.PropertyType.EditorAlias)))
-            {
-
-                switch (publishedProperty.PropertyType.EditorAlias)
-                {
-                    case FlexiFormConstants.SupportedContent.BlockGrid:
-                        var blockGridModel = publishedProperty.GetValue() as BlockGridModel;
-                        var foundForm = blockGridModel
-                            .Where(x => x.Content.ContentType.Key == FlexiFormConstants.Application.BlockGridContentId)
-                            .Select(x => x.Content)
-                            .Cast<ContactForm>()
-                            .Where(x => x.Key.ToString() == model.FormIdentifier)
-                            .FirstOrDefault();
-
-                        if (foundForm != null)
-                        {
-                            return foundForm;
-                        }
-                        break;
-
-                    default:
-                        return null;
-                }
-
-            }
-            return null;
+            _umbracoContextAccessor = umbracoContextAccessor;
         }
 
 
@@ -181,16 +160,92 @@ namespace FlexiForms.Controllers
                 }
             }
 
-            TempData.Add("Success", 
-                (!formDetails.SendExternalEmail || await SendExternalEmail(model, formDetails)) &&
-                (!formDetails.SendInternalEmail || await SendInternalEmail(model, formDetails))
-            );
+            if (!_umbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext? umbraco))
+                throw new Exception("Umbraco context currently unavailable.");
+
+            bool externalSent = false;
+            if (formDetails.SendExternalEmail)
+            {
+                externalSent = await SendExternalEmail(model, formDetails);
+            }
+
+            bool internalSent = false;
+            if (formDetails.SendInternalEmail)
+            {
+                externalSent = await SendInternalEmail(model, formDetails);
+            }
+
+            if (formDetails.StoreResponse && !string.IsNullOrEmpty(formDetails.FormIdentifier))
+            {
+                var dboResponse = new FlexiFormResponsesSchema()
+                {
+                    FormIdentifier = formDetails.FormIdentifier,
+                    Name = model.Name,
+                    Email = model.Email,
+                    Fields = FormResponseToString(model.Elements, formDetails),
+                    InternalSent = internalSent,
+                    ExternalSent = externalSent,
+                    CreateDate = DateTime.Now,
+                };
+
+                await _responseRepository.Create(dboResponse);
+            }
+
+            TempData.Add("Success", true);
 
             return RedirectToCurrentUmbracoPage();
         }
 
 
-        async Task<bool> SendInternalEmail(ContactFormViewModel model, ContactForm contactForm)
+        private string? FormResponseToString(IEnumerable<FormElementBase>? responses, ContactForm contactForm)
+        {
+            if (responses == null)
+            {
+                return null;
+            }
+            Dictionary<string, string> fieldValues = new Dictionary<string, string>();
+            foreach (var response in responses)
+            {
+                fieldValues.Add(contactForm.GetElementById(response.Id)?.Label, response.Value);
+            }
+
+            return JsonConvert.SerializeObject(fieldValues);
+        }
+
+
+        private ContactForm? GetCorrespondingForm(ContactFormViewModel model, IPublishedContent publishedPageContent)
+        {
+            foreach (var publishedProperty in publishedPageContent.Properties
+                .Where(x => FlexiFormConstants.SupportedContent.GetSuppportedContent().Contains(x.PropertyType.EditorAlias)))
+            {
+
+                switch (publishedProperty.PropertyType.EditorAlias)
+                {
+                    case FlexiFormConstants.SupportedContent.BlockGrid:
+                        var blockGridModel = publishedProperty.GetValue() as BlockGridModel;
+                        var foundForm = blockGridModel
+                            .Where(x => x.Content.ContentType.Key == FlexiFormConstants.Application.BlockGridContentId)
+                            .Select(x => x.Content)
+                            .Cast<ContactForm>()
+                            .Where(x => x.Key.ToString() == model.FormIdentifier)
+                            .FirstOrDefault();
+
+                        if (foundForm != null)
+                        {
+                            return foundForm;
+                        }
+                        break;
+
+                    default:
+                        return null;
+                }
+
+            }
+            return null;
+        }
+
+
+        private async Task<bool> SendInternalEmail(ContactFormViewModel model, ContactForm contactForm)
         {
             try
             {
@@ -242,7 +297,7 @@ namespace FlexiForms.Controllers
         }
 
 
-        async Task<bool> SendExternalEmail(ContactFormViewModel model, ContactForm contactForm)
+        private async Task<bool> SendExternalEmail(ContactFormViewModel model, ContactForm contactForm)
         {
             try
             {
@@ -293,7 +348,7 @@ namespace FlexiForms.Controllers
         }
 
 
-        public async Task<bool> IsValid(string captcha, CaptchaCredentialsValue captchaCredentials)
+        private async Task<bool> IsValid(string captcha, CaptchaCredentialsValue captchaCredentials)
         {
             try
             {

@@ -5,7 +5,7 @@ using Umbraco.Cms.Core.Strings;
 using Umbraco.Cms.Infrastructure.Serialization;
 
 
-namespace FlexiForms.Backoffice
+namespace FlexiForms.Backoffice.PropertyEditors
 {
     [JsonConverter(typeof(NoTypeConverterJsonConverter<CaptchaCredentialsValue>))]
     [TypeConverter(typeof(CaptchaCredentialsValueConverter))]
