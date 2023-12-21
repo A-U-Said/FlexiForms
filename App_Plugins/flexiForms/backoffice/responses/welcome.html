@@ -1,0 +1,35 @@
+<div ng-controller="FlexiForms.WelcomeController as vm" class="clearfix">
+
+  <umb-load-indicator ng-if="vm.loading"></umb-load-indicator>
+
+  <umb-editor-view footer="false" header="false">
+
+    <umb-box>
+      <umb-box-content>
+        <h1><span class="color-indigo icon icon-share-alt-2"></span> {{vm.page.title}}</h1>
+				<p>{{vm.page.description}}</p>
+      </umb-box-content>
+    </umb-box>
+    
+    <umb-pane>
+
+      <div class="ff-welcome">
+
+        <div class="ff-cards">
+
+          <umb-box ng-repeat="formWithResponses in vm.formsWithResponses">
+						<umb-box-content ng-click="vm.goToResponses(formWithResponses.identifier)">
+							<h3><span class="icon-chart-curve"></span> {{formWithResponses.identifier}}</h3>
+							<small>{{formWithResponses.count}} Response{{formWithResponses.count > 1 ? "s" : ""}}</small>
+						</umb-box-content>
+          </umb-box>
+
+        </div>
+
+      </div>
+
+    </umb-pane>
+
+  </umb-editor-view>
+
+</div>

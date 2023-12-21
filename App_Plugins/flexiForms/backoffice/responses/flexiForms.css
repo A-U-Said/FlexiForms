@@ -4,3 +4,38 @@
   margin-bottom: 10px;
   margin-top: 10px;
 }
+
+.ff-export-card .umb-box-content {
+  display: flex;
+	flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.ff-export-title {
+  display: flex;
+  align-items: center;
+}
+
+.ff-export-card small {
+	margin-bottom: 8px;
+}
+
+.ff-export-title i {
+  font-size: 32px;
+  padding-right: 14px;
+}
+
+.ff-welcome {
+  display: flex;
+  flex-flow: row nowrap;
+}
+.ff-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(30%,1fr));
+  column-gap: 16px;
+  width: 100%;
+}
+.ff-cards .umb-box {
+  cursor: pointer;
+}

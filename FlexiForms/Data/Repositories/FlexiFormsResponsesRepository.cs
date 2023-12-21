@@ -3,6 +3,7 @@ using FlexiForms.Data.Repositories;
 using Umbraco.Cms.Infrastructure.Scoping;
 using NPoco;
 using Umbraco.Cms.Infrastructure.Persistence;
+using FlexiForms.Messages.Views;
 
 namespace FlexiForms.Data.Repositories
 {
@@ -18,19 +19,20 @@ namespace FlexiForms.Data.Repositories
         }
 
 
-        public async Task<ICollection<FlexiFormResponsesSchema>> GetAliases()
+        public async Task<ICollection<FormResponseCount>> GetAliases()
         {
             using var scope = _scopeProvider.CreateScope();
 
             Sql<ISqlContext>? sql1 = scope.SqlContext?.Sql()?
                 .Select<FlexiFormResponsesSchema>(x => x.FormIdentifier)
+                .AndSelectCount("ResponseCount")
                 .From<FlexiFormResponsesSchema>()
                 .GroupBy<FlexiFormResponsesSchema>(x => x.FormIdentifier);
 
             var queryResults = await scope.Database.FetchAsync<FlexiFormResponsesSchema>(sql1);
             scope.Complete();
 
-            return queryResults;
+            return queryResults.Select(x => new FormResponseCount(x.FormIdentifier, x.ResponseCount)).ToList();
         }
 
 

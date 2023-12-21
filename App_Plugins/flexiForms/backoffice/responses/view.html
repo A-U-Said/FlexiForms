@@ -1,61 +1,22 @@
-<div class="clearfix" ng-controller="FlexiForms.ResponseViewController as vm">
+<div class="clearfix" ng-controller="FlexiForms.ViewController as vm">
 
   <umb-editor-view footer="false">
-	
+
 		<umb-editor-header
-			name="vm.pageName"
+			name="vm.page.name"
 			name-locked="true"
 			hide-icon="true"
 			hide-description="true"
+			navigation="vm.page.navigation"
 			hide-alias="true">
 		</umb-editor-header>
-		
-		<umb-editor-container>
-		
-			<umb-load-indicator ng-show="vm.loading"></umb-load-indicator>
-			
-			<umb-editor-sub-header>	
-				<umb-editor-sub-header-content-right>
-					<umb-search-filter 
-						text="Search..."
-						model="vm.filter.searchTerm">
-					</umb-search-filter>
-				</umb-editor-sub-header-content-right>
-			</umb-editor-sub-header>
 
-			<umb-box ng-if="!vm.loading && vm.responses.length === 0">
-				<umb-box-content class="block-form">
-					<umb-empty-state size="small">
-						<h4>There are no social media profiles.</h4>
-					</umb-empty-state>
-				</umb-box-content>
-			</umb-box>
-			
-			<table class="table table-hover" ng-show="!vm.loading && vm.filtered.length > 0">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Internal Email Sent</th>
-						<th>External Email Sent</th>
-						<th>Created</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="response in vm.filtered = (vm.responses | filter: { 'name': vm.filter.searchTerm })" ng-click="vm.openResponse(response)">
-						<th>{{response.name}}</th>
-						<th>{{response.email}}</th>
-						<th>{{response.internalSent}}</th>
-						<th>{{response.externalSent}}</th>
-						<th>{{response.createDate | date:'dd/MM/yyyy HH:mm'}}</th>
-					</tr>
-				</tbody>
-			</table>
-			
-			<umb-empty-state ng-if="!vm.loading && vm.filtered.length === 0" position="center">
-				<h5>There were no responses found matching this search</h5>
-			</umb-empty-state>
-			
+		<umb-editor-container>
+										
+			<umb-editor-sub-views
+				sub-views="vm.page.navigation">
+			</umb-editor-sub-views>
+
 		</umb-editor-container>
 
 	</umb-editor-view>

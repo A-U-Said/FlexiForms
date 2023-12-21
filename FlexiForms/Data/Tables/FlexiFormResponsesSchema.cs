@@ -40,5 +40,8 @@ namespace FlexiForms.Data.Tables
 
         [Column("CreateDate")]
         public required DateTime CreateDate { get; set; }
+
+        [ResultColumn("ResponseCount")]
+        public int ResponseCount { get; set; }
     }
 }

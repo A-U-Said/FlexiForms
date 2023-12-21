@@ -52,10 +52,10 @@ namespace FlexiForms.Backoffice.Section
                         count.ToString(), 
                         "-1", 
                         queryStrings, 
-                        identifier.FormIdentifier, 
+                        identifier.Identifier, 
                         "icon-chart-curve", 
                         false,
-                        $"{FlexiFormConstants.Backoffice.TreeUrl}/view/{identifier.FormIdentifier}"
+                        $"{FlexiFormConstants.Backoffice.TreeUrl}/view/{identifier.Identifier}"
                     );
                     nodes.Add(node);
                     count++;
@@ -80,6 +80,28 @@ namespace FlexiForms.Backoffice.Section
             }
 
             return menu;
+        }
+
+        protected override ActionResult<TreeNode?> CreateRootNode(FormCollection queryStrings)
+        {
+            var rootResult = base.CreateRootNode(queryStrings);
+
+            if (rootResult.Result is not null)
+            {
+                return rootResult;
+            }
+
+            var root = rootResult.Value;
+
+            if (root is not null)
+            {
+                root.RoutePath = FlexiFormConstants.Backoffice.TreeRootUrl;
+                root.Icon = "icon-chart-curve";
+                root.HasChildren = true;
+                root.MenuUrl = null;
+            }
+
+            return root;
         }
 
     }

@@ -18,6 +18,7 @@ namespace FlexiForms
             public const string TreeAlias = "responses";
             public const string TreeName = "FlexiForms Responses";
             public const string TreeUrl = $"{SectionAlias}/{TreeAlias}";
+            public const string TreeRootUrl = $"{TreeUrl}/welcome";
         }
 
         public static class Database

@@ -24,6 +24,17 @@ angular.module('umbraco.resources').factory('FlexiFormsResponsesResource', funct
         `Failed to delete responses with form alias ${formIdentifier}`
       );
     },
+		
+		ExportFormResponses: (formIdentifier) => {
+      return umbRequestHelper.downloadFile(`${baseUrl}/ExportFormResponses?formIdentifier=${formIdentifier}`);
+    },
+		
+		GetAllFormsWithReplies: () => {
+			return umbRequestHelper.resourcePromise(
+        $http.get(`${baseUrl}/GetAllFormsWithReplies`),
+        `Failed to get forms with replies`
+      );
+		}
 
   }
 

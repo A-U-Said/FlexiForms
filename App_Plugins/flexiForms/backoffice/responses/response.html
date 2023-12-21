@@ -29,8 +29,8 @@
 				</umb-box-content>
 			</umb-box>
 			
-			<umb-box>
-				<umb-box-header title="Responses"></umb-box-header>
+			<umb-box ng-if="model.response.fields != null">
+				<umb-box-header title="Fields"></umb-box-header>
 				<umb-box-content>
 					<div class="ff-response-item" ng-repeat="(key, value) in model.response.fields">
 						<strong>{{ key }}</strong>

@@ -1,0 +1,25 @@
+<div ng-controller="FlexiForms.ExportResponsesController as vm" class="clearfix">
+
+  <umb-load-indicator ng-if="vm.loading"></umb-load-indicator>
+
+    <umb-box class="ff-export-card">
+      <umb-box-content>
+        <div class="ff-export-title">
+          <i class="icon icon-inbox color-indigo"></i>
+          <h2>Export</h2>
+        </div>
+        <small>Export Responses to CSV</small>
+        <div>
+          <umb-button 
+            type="button"
+            action="vm.exportButton.action()"
+            state="vm.exportButton.state"
+            button-style="success"
+            label="{{vm.exportButton.label}}"
+            disabled="vm.loading">
+          </umb-button>
+        </div>
+      </umb-box-content>
+    </umb-box>
+
+</div>
