@@ -1,72 +1,69 @@
 ﻿using FlexiForms.Models.FormFields;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System.Xml.Linq;
-using Umbraco.Cms.Web.Common.PublishedModels;
-
+using FlexiForms.Models.ViewModels;
+using Umbraco.Cms.Core.Models.Blocks;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using FlexiFormModels = FlexiForms.Models.ViewModels;
 
 namespace FlexiForms.Extensions
 {
     public static class ViewModelExtensions
     {
-
-        public static List<FormElementBase> CreateViewElements(this ContactForm contactForm)
+        public static List<FormElementBase> CreateViewElements(this FlexiFormModels.ContactForm contactForm)
         {
             var elements = new List<FormElementBase>();
 
-            var formelements = contactForm.Elements?
-                .Select(x => x.Content)
-                .Cast<FormElement>();
-
-            foreach (var formelement in formelements)
+            foreach (var formelement in contactForm.Elements)
             {
-                switch (formelement)
+                switch (formelement.ContentType.Key)
                 {
-                    case FormTextbox:
+                    case var elementKey when (elementKey == FlexiFormConstants.Identifiers.TextboxId):
                         elements.Add(new Textbox
                         {
                             Id = formelement.Key,
-                            Label = formelement.Label,
-                            IsMandatory = formelement.IsMandatory
+                            Label = formelement.Value<string>("label"),
+                            IsMandatory = formelement.Value<bool>("isMandatory")
                         });
                         break;
 
-                    case FormCheckbox:
+                    case var elementKey when (elementKey == FlexiFormConstants.Identifiers.CheckboxId):
                         elements.Add(new Checkbox
                         {
                             Id = formelement.Key,
-                            Label = formelement.Label,
-                            IsMandatory = formelement.IsMandatory
+                            Label = formelement.Value<string>("label"),
+                            IsMandatory = formelement.Value<bool>("isMandatory")
                         });
                         break;
 
-                    case FormTextArea:
+                    case var elementKey when (elementKey == FlexiFormConstants.Identifiers.TextAreaId):
                         elements.Add(new TextArea
                         {
                             Id = formelement.Key,
-                            Label = formelement.Label,
-                            IsMandatory = formelement.IsMandatory
+                            Label = formelement.Value<string>("label"),
+                            IsMandatory = formelement.Value<bool>("isMandatory")
                         });
                         break;
 
-                    case FormRadioSection radioSection:
+                    case var elementKey when (elementKey == FlexiFormConstants.Identifiers.RadioId):
                         elements.Add(new RadioSection
                         {
                             Id = formelement.Key,
-                            Label = formelement.Label,
-                            IsMandatory = formelement.IsMandatory,
-                            RadioOptions = radioSection.GetOptions()
-                                .Select(x => x.Option ?? "")
+                            Label = formelement.Value<string>("label"),
+                            IsMandatory = formelement.Value<bool>("isMandatory"),
+                            RadioOptions = formelement.Value<BlockListModel>("radioOptions")?
+                                .Select(x => x.Content.Value<string>("option") ?? "")
+                                ?? new List<string>()
                         });
                         break;
 
-                    case FormDropdown dropdown:
+                    case var elementKey when (elementKey == FlexiFormConstants.Identifiers.DropdownId):
                         elements.Add(new Dropdown
                         {
                             Id = formelement.Key,
-                            Label = formelement.Label,
-                            IsMandatory = formelement.IsMandatory,
-                            DropdownOptions = dropdown.GetOptions()
-                                .Select(x => x.Option ?? "")
+                            Label = formelement.Value<string>("label"),
+                            IsMandatory = formelement.Value<bool>("isMandatory"),
+                            DropdownOptions = formelement.Value<BlockListModel>("dropdownOptions")?
+                                .Select(x => x.Content.Value<string>("option") ?? "")
+                                ?? new List<string>()
                         });
                         break;
 
@@ -78,35 +75,22 @@ namespace FlexiForms.Extensions
         }
 
 
-        public static IEnumerable<FormOptionsList> GetOptions(this FormDropdown formDropdown)
-        {
-            if (formDropdown.DropdownOptions == null)
-            {
-                return new List<FormOptionsList>();
-            }
-
-            return formDropdown.DropdownOptions.Select(x => x.Content).Cast<FormOptionsList>();
-        }
-
-
-        public static IEnumerable<FormOptionsList> GetOptions(this FormRadioSection formRadio)
-        {
-            if (formRadio.RadioOptions == null)
-            {
-                return new List<FormOptionsList>();
-            }
-
-            return formRadio.RadioOptions.Select(x => x.Content).Cast<FormOptionsList>();
-        }
-
-
-        public static FormElement? GetElementById (this ContactForm contactForm, Guid Id)
+        public static FormElementBase? GetElementById (this ContactForm contactForm, Guid Id)
         {
             return contactForm.Elements?
-                .Where(x => x.Content.Key == Id)
-                .Select(x => x.Content)
-                .Cast<FormElement>()
+                .Where(x => x.Key == Id)
+                .ToFormElementBase()
                 .FirstOrDefault();
+        }
+
+        public static IEnumerable<FormElementBase> ToFormElementBase(this IEnumerable<IPublishedElement> source)
+        {
+            return source.Select(x => new FormElementBase()
+            {
+                Id = x.Key,
+                Label = x.Value<string>("label") ?? "",
+                IsMandatory = x.Value<bool>("isMandatory"),
+            });
         }
 
     } 

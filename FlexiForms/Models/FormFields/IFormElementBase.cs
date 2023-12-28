@@ -6,7 +6,7 @@ namespace FlexiForms.Models.FormFields
         Guid Id { get; set; }
         string? Label { get; set; }
         bool? IsMandatory { get; set; }
-        string Value { get; set; }
+        string? Value { get; set; }
     }
 
 }

@@ -21,15 +21,12 @@ using Umbraco.Cms.Core.PropertyEditors.ValueConverters;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Serialization;
-using Umbraco.Cms.Web.Common.PublishedModels;
+using FlexiFormModels = FlexiForms.Models;
 using FlexiForms.Models.FormFields;
-using FlexiForms.Backoffice;
 using FlexiForms.Extensions;
-using static Umbraco.Cms.Core.Collections.TopoGraph;
 using FlexiForms.Backoffice.PropertyEditors;
 using FlexiForms.Data.Tables;
 using FlexiForms.Data.Repositories;
-using Lucene.Net.Index;
 
 namespace FlexiForms.Controllers
 {
@@ -150,9 +147,9 @@ namespace FlexiForms.Controllers
                 return CurrentUmbracoPage();
             }
 
-            foreach (var formElement in formDetails.Elements.Select(x => x.Content).Cast<FormElement>())
+            foreach (var formElement in formDetails.Elements?.ToFormElementBase())
             {
-                if (formElement.IsMandatory && model.Elements.FirstOrDefault(x => x.Id == formElement.Key)?.Value == null)
+                if (formElement.IsMandatory.Value && model.Elements.FirstOrDefault(x => x.Id == formElement.Id)?.Value == null)
                 {
                     ModelState.AddModelError("Required field is empty", $"{formElement.Label} cannot be empty");
                     TempData.Add("Success", false);
@@ -197,7 +194,7 @@ namespace FlexiForms.Controllers
         }
 
 
-        private string? FormResponseToString(IEnumerable<FormElementBase>? responses, ContactForm contactForm)
+        private string? FormResponseToString(IEnumerable<FormElementBase>? responses, FlexiFormModels.ViewModels.ContactForm contactForm)
         {
             if (responses == null)
             {
@@ -213,7 +210,7 @@ namespace FlexiForms.Controllers
         }
 
 
-        private ContactForm? GetCorrespondingForm(ContactFormViewModel model, IPublishedContent publishedPageContent)
+        private FlexiFormModels.ViewModels.ContactForm? GetCorrespondingForm(ContactFormViewModel model, IPublishedContent publishedPageContent)
         {
             foreach (var publishedProperty in publishedPageContent.Properties
                 .Where(x => FlexiFormConstants.SupportedContent.GetSuppportedContent().Contains(x.PropertyType.EditorAlias)))
@@ -224,9 +221,8 @@ namespace FlexiForms.Controllers
                     case FlexiFormConstants.SupportedContent.BlockGrid:
                         var blockGridModel = publishedProperty.GetValue() as BlockGridModel;
                         var foundForm = blockGridModel
-                            .Where(x => x.Content.ContentType.Key == FlexiFormConstants.Application.BlockGridContentId)
-                            .Select(x => x.Content)
-                            .Cast<ContactForm>()
+                            .Where(x => x.Content.ContentType.Key == FlexiFormConstants.Identifiers.BlockGridContentId)
+                            .Select(x => new FlexiFormModels.ViewModels.ContactForm(x.Content))
                             .Where(x => x.Key.ToString() == model.FormIdentifier)
                             .FirstOrDefault();
 
@@ -245,7 +241,7 @@ namespace FlexiForms.Controllers
         }
 
 
-        private async Task<bool> SendInternalEmail(ContactFormViewModel model, ContactForm contactForm)
+        private async Task<bool> SendInternalEmail(ContactFormViewModel model, FlexiFormModels.ViewModels.ContactForm contactForm)
         {
             try
             {
@@ -297,7 +293,7 @@ namespace FlexiForms.Controllers
         }
 
 
-        private async Task<bool> SendExternalEmail(ContactFormViewModel model, ContactForm contactForm)
+        private async Task<bool> SendExternalEmail(ContactFormViewModel model, FlexiFormModels.ViewModels.ContactForm contactForm)
         {
             try
             {

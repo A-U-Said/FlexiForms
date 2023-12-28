@@ -5,7 +5,7 @@ using NPoco;
 
 namespace FlexiForms.Extensions
 {
-    public static class ViewExtensions
+    public static class DtoExtensions
     {
         public static IEnumerable<TResult> MapToView<TSource, TResult>(this ICollection<TSource> source)
             where TSource : IFlexiFormsSchema

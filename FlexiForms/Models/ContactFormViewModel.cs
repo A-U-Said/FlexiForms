@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using FlexiForms.Backoffice;
 using FlexiForms.Backoffice.PropertyEditors;
 using FlexiForms.Extensions;
 using FlexiForms.Models.FormFields;
-using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Strings;
-using Umbraco.Cms.Web.Common.PublishedModels;
 
 
 namespace FlexiForms.Models
@@ -16,7 +13,7 @@ namespace FlexiForms.Models
         {
         }
 
-        public ContactFormViewModel(ContactForm contactForm)
+        public ContactFormViewModel(ViewModels.ContactForm contactForm)
         {
             Elements = contactForm.CreateViewElements();
             FormIdentifier = contactForm.Key.ToString();

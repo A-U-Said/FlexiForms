@@ -1,13 +1,12 @@
 ﻿@using Umbraco.Cms.Core.Models
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-@using FlexiForms.Models;
+@using FlexiFormModels = FlexiForms.Models;
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
 @{
-    var content = (ContentModels.ContactForm)Model.Content;
+    var content = new FlexiFormModels.ViewModels.ContactForm(Model.Content);
 }
 
 
 <partial 
     name="~/Views/Partials/forms/ContactForm.cshtml"
-    model='@new ContactFormViewModel(content)'
+    model='@new FlexiFormModels.ContactFormViewModel(content)' 
 />
